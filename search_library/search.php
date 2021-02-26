@@ -84,6 +84,7 @@ class searching
             }
              
         }
+
         $data['string']=$expert_and_company; 
         array_push($data['string'], $email); 
         $data['email']=$email;    
@@ -98,12 +99,19 @@ class searching
             {
                 if ($value_q['type']=='string') 
                 {  
+                    if (empty($expert_and_company) && !empty($email)){
+                        array_push($expert_and_company,$email);
+                        $search_col = 'email'; 
+                    } else {
+                        $search_col = $value_q['search_col_name']; 
+                    }
+
                     if(!empty($expert_and_company))
                     {
                         $attachment=array();
                         foreach ($expert_and_company as $key => $value) 
                         {    
-                            array_push($attachment,''.$value_q['search_col_name'].' LIKE "%'.$value.'%"'); 
+                            array_push($attachment,''.$search_col.' LIKE "%'.$value.'%"'); 
                         }
                         $append_string_in_sql=implode(' OR ', $attachment);
                         $query='SELECT '.$value_q['get_colms'].' FROM '.$value_q['table_name'].' WHERE '.$append_string_in_sql.'';
